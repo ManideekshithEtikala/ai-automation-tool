@@ -1,7 +1,12 @@
-
-
-export default function Home() {
+import { requireAuth } from "@/lib/auth-utils";
+import {caller} from '@/trpc/server';
+const  Page=async ()=> {
+  await requireAuth();
+  const data = await caller.getUsers();
   return (
-   <div>hell0world</div>
+   <div className="min-h-screen min-w-screen flex items-center justify-center">
+{JSON.stringify(data)}
+   </div>
   );
 }
+export default Page;

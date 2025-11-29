@@ -15,7 +15,7 @@ import{
     CardTitle,
 } from '@/components/ui/card'; // Ensure this path is correct and the file exists
 import { Input } from '@/components/ui/input';
-// import{authClient} from '@/lib/clients/auth-client';
+import { authClient } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 const loginSchema = z.object({
@@ -33,7 +33,14 @@ export function LoginForm(){
         },
     });
     const onSubmit = async (data:LoginFormValues) => {
-        console.log(data);
+        await authClient.signIn.email({
+            email:data.email,
+            password:data.password,
+            callbackURL:'/'
+        },{
+            onSuccess:()=>router.push('/'),
+            onError:(ctx)=>toast.error(ctx.error.message),
+        })
     }
     const isPending = form.formState.isSubmitting;
     return(<div className='flex flex-col gap-6'>

@@ -15,33 +15,46 @@ import{
     CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-// import{authClient} from '@/lib/clients/auth-client';
 import { cn } from '@/lib/utils';
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-const loginSchema = z.object({
+import { authClient } from '@/lib/auth-client';
+const refisterSchema = z.object({
     email: z.email('Enter your email'),
     password: z.string().min(1,'Password is required'),
-})
-type LoginFormValues = z.infer<typeof loginSchema>;
+    confirmPassword:z.string(),
+}).refine((data)=>data.password===data.confirmPassword,{
+    message:"Passwords do not match",
+    path:["confirmPassword"],
+});
+type RegisterFromValues = z.infer<typeof refisterSchema>;
 export function RegisterFrom(){
     const router = useRouter();
-    const form = useForm<LoginFormValues>({
-        resolver: zodResolver(loginSchema),
+    const form = useForm<RegisterFromValues>({
+        resolver: zodResolver(refisterSchema),
         defaultValues:{
             email:"",
             password:"",
+            confirmPassword:"",
         },
     });
-    const onSubmit = async (data:LoginFormValues) => {
-        console.log(data);
+    const onSubmit = async (data:RegisterFromValues) => {
+        await authClient.signUp.email({
+            name:data.email,
+            email:data.email,
+            password:data.password,
+            callbackURL:'/'
+        },{
+            onSuccess:()=>router.push('/'),
+            onError:(ctx)=>toast.error(ctx.error.message),
+        })
     }
     const isPending = form.formState.isSubmitting;
     return(<div className='flex flex-col gap-6'>
         <Card className={cn('w-full max-w-md mx-auto')}>    
         <CardHeader className='text-center'>
-            <CardTitle className='text-2xl font-bold'>Login to Your Account</CardTitle>
+            <CardTitle className='text-2xl font-bold'>Get Started</CardTitle>
             <CardDescription>
-                Don't have an account?
+                Create an account to continue
             </CardDescription>
         </CardHeader>
         <CardContent>
@@ -91,14 +104,31 @@ export function RegisterFrom(){
                             </FormItem>
                         )}
                         />
+                        <FormField
+                        control={form.control}
+                        name='confirmPassword'
+                        render={({field})=>(
+                            <FormItem>
+                                <FormLabel>Confirm Password</FormLabel>
+                                <FormControl>
+                                    <Input
+                                    placeholder='Enter your passwrod again'
+                                    type='password'
+                                    {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                        />
                         <Button type="submit" className='w-full' disabled={isPending}>
-                            Login
+                            SignUp
                         </Button>
                     </div>
                     <div className='text-center text-sm'>
-                        dont havee an account?{' '}
-                        <Link href='/signup' className='text-primary underline-offset-4'>
-                        SignUp
+                        Already have an account?{' '}
+                        <Link href='/login' className='text-primary underline-offset-4'>
+                        Login
                         </Link>
                     </div>
                 </form>

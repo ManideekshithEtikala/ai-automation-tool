@@ -1,3 +1,4 @@
+import { LogoutButton } from "./logout";
 import { requireAuth } from "@/lib/auth-utils";
 import {caller} from '@/trpc/server';
 const  Page=async ()=> {
@@ -6,6 +7,7 @@ const  Page=async ()=> {
   return (
    <div className="min-h-screen min-w-screen flex items-center justify-center">
 {JSON.stringify(data)}
+<LogoutButton />
    </div>
   );
 }

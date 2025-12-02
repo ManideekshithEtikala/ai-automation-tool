@@ -67,7 +67,7 @@ export function RegisterFrom(){
                             className='w-full'
                             type='button'
                             disabled={isPending}
-                            >   continue with Google</Button>
+                            > <Image alt='Google' src ="/logos/google.svg" width={20} height={20}/>  continue with Google</Button>
                     </div>
                     <div className='grid gap-6'>
                         <FormField

@@ -1,7 +1,11 @@
-import { RegisterFrom } from "@/features/auth/components/register"
 
+import Link from "next/link";
+import Image from "next/image";
+import { RegisterFrom } from "@/features/auth/components/register";
 const Page=()=>{
 
-    return <div><RegisterFrom /></div>
+    return (
+        <RegisterFrom />
+    )
 }
 export default Page;

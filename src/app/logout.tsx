@@ -7,7 +7,7 @@ export const LogoutButton=()=>{
 return( <Button onClick={()=>authClient.signOut({
     fetchOptions:{
         onSuccess:()=>{
-            router.push('/login');
+            router.push('/');
     }
 }})}
 >Logout Button</Button>)
